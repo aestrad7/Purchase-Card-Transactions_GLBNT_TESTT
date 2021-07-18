@@ -2,6 +2,7 @@ import sys
 import pandas as pd
 import numpy as np
 import glob
+import matplotlib.pyplot as plt
 
 from sklearn.preprocessing import OrdinalEncoder
 
@@ -56,9 +57,59 @@ class Explorer():
 
         return df_f
     
+    def graficador(self, df_var, size = (12,6), tipo ="plot", tittle =""):
+        """Funcion para graficas unicas de pyplot
+
+        Args:
+            df_var (DataFrame de dimension 1 o array): En esta funcion se requiere que se decretre de una vez el nombre de la variable del data frame, ej: df["variable1"]
+            tipo (str, optional): [description]. Defaults to "plot".
+            tittle (str, optional): [description]. Defaults to "".
+            size (tuple, optional): [description]. Defaults to (12,16).
+        """        
+
+        plt.figure(figsize=size)
+        
+        if tipo == "plot":
+            plt.plot(df_var)
+
+        elif tipo =="hist":
+            plt.hist(df_var)
+        
+        plt.title(tittle)
+        plt.grid()
+        plt.show()
+
+    def comparador (self, variable, df1, df2, df3):
+        """Esta funcion me pervite visualizar graficamente la distribucion la misma variable en tres DataFrames diferentes.
+        Es obligatorio que os DataFrame tengan el mismo nombre en las variables.
+
+        Args:
+            variable (string): Es el nombre de la columna del datafram a comparar
+            df1 (DataFrame): DataFrame
+            df2 (DataFrame): DataFrame
+            df3 (DataFrame): DataFrame
+        """        
+
+        mnd1 = min(df1[variable])
+        mxd1 = max(df1[variable])
+        mnd2 = min(df2[variable])
+        mxd2 = max(df2[variable])
+        mnd3 = min(df3[variable])
+        mxd3 = max(df3[variable])
+        
+        minimo=min(mnd1, mnd2, mnd3)
+        maximo= max(mxd1, mxd2, mxd3)
+        
+        plt.style.use('bmh')
+        plt.hist(df1[variable], histtype="stepfilled", bins=15, alpha=0.8, density=True, range=(minimo-1, maximo+1), label=0)
+        plt.hist(df2[variable], histtype="stepfilled", bins=15, alpha=0.8, density=True, range=(minimo-1, maximo+1), label=1)
+        plt.hist(df3[variable], histtype="stepfilled", bins=15, alpha=0.8, density=True, range=(minimo-1, maximo+1), label=2)
+        plt.legend()
+        plt.title(variable)
+        plt.show()
+
     # def estandarizador(self,):
 
-    # def graficador(self,):
     # def subgraficador(self,):
     # def KMeans_function(self,):
     # def PCA_function(self,):
